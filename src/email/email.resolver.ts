@@ -8,32 +8,33 @@ import {
   ResolveField,
   Resolver,
 } from '@nestjs/graphql';
+import { Equal, Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
 import { EmailFiltersArgs, UserEmail } from './email.types';
+import { EmailService } from './email.service';
 import { User } from '../user/user.types';
+import { UserEntity } from '../user/user.entity';
 
 @Resolver(() => UserEmail)
 export class EmailResolver {
+  constructor(
+    private readonly _service: EmailService,
+    @InjectRepository(UserEntity)
+    private readonly userRepository: Repository<UserEntity>,
+  ) {}
+
   @Query(() => UserEmail, { name: 'email' })
   getEmail(@Args({ name: 'emailId', type: () => ID }) emailId: string) {
-    // TODO IMPLEMENTATION
-    // Récupérer une adresse email par rapport à son identifiant
-    throw new NotImplementedException();
+    return this._service.findById(emailId);
   }
 
   @Query(() => [UserEmail], { name: 'emailsList' })
   async getEmails(@Args() filters: EmailFiltersArgs): Promise<UserEmail[]> {
-    // TODO IMPLEMENTATION
-    // Récupérer une liste d'e-mails correspondants à des filtres
-
-    // Je pense qu'on pourrait essayer de refactoriser pour réutiliser
-    // la même chose que dans UserResolver pour récupérer les emails
-    throw new NotImplementedException();
+    return this._service.findByFilters(filters);
   }
 
   @ResolveField(() => User, { name: 'user' })
   async getUser(@Parent() parent: UserEmail): Promise<User> {
-    // TODO IMPLEMENTATION
-    // Récupérer l'utilisateur à qui appartient l'email
-    throw new NotImplementedException();
+    return this.userRepository.findOneBy({ id: Equal(parent.userId) });
   }
 }

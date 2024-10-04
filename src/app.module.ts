@@ -7,6 +7,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserEntity } from './user/user.entity';
 import { config } from 'dotenv';
 import { EmailResolver } from './email/email.resolver';
+import { EmailService } from './email/email.service';
 import { EmailEntity } from './email/email.entity';
 
 config({});
@@ -29,6 +30,6 @@ config({});
       autoSchemaFile: true,
     }),
   ],
-  providers: [UserResolver, EmailResolver, UserService],
+  providers: [UserResolver, EmailResolver, UserService, EmailService],
 })
 export class AppModule {}
