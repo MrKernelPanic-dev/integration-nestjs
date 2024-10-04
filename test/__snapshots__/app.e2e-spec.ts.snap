@@ -1,0 +1,7 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Tests e2e EmailResolver [Add/Remove] user mail address [13] Devrait retourner une erreur de validation si l'address mail n'est pas conforme 1`] = `
+Array [
+  "email must be an email",
+]
+`;

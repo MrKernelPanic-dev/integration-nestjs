@@ -33,6 +33,9 @@ const knownUser = {
   ],
 };
 
+const newEmailAddress = "test@upcse-integration.coop"
+const wrongEmailAddress = "Wrong Email address"
+
 const [email1, email2, email3] = knownUser.emails;
 
 describe('Tests e2e', () => {
@@ -260,6 +263,44 @@ describe('Tests e2e', () => {
           .expect((res) => {
             expect(res.body.errors?.[0]?.message).not.toBe('Not Implemented');
             expect(res.body.data?.emailsList[0].user.id).toBe(knownUserId);
+          });
+      });
+    });
+
+    describe('[Add/Remove] user mail address', () => {
+      it(`[13] Devrait retourner une erreur de validation si l'address mail n'est pas conforme`, () => {
+        return request(app.getHttpServer())
+          .post('/graphql')
+          .send({
+            query: `mutation {addUserEmail(userId:"${email1.userId}", email: "${wrongEmailAddress}") { id }}`,
+          })
+          .expect(200)
+          .expect((res) => {
+            expect(
+              res.body.errors?.[0]?.extensions?.originalError?.message,
+            ).toMatchSnapshot();
+          });
+      });
+      it(`[14] Devrait ajouter un email à l'utilisateur`, () => {
+        return request(app.getHttpServer())
+          .post('/graphql')
+          .send({
+            query: `mutation {addUserEmail(userId:"${email1.userId}", email: "${newEmailAddress}") { id }}`,
+          })
+          .expect(200)
+          .expect((res) => {
+            expect(res.body.data.addUserEmail).toBeDefined();
+          });
+      });
+      it(`[15] Devrait retourner le mail de l'utilisateur supprimé`, () => {
+        return request(app.getHttpServer())
+          .post('/graphql')
+          .send({
+            query: `mutation {deleteUserEmail(userId:"${email1.userId}", email: "${email3.address}") { address }}`,
+          })
+          .expect(200)
+          .expect((res) => {
+            expect(res.body.data.deleteUserEmail).toBeDefined();
           });
       });
     });
