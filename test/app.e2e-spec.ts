@@ -33,8 +33,8 @@ const knownUser = {
   ],
 };
 
-const newEmailAddress = "test@upcse-integration.coop"
-const wrongEmailAddress = "Wrong Email address"
+const newEmailAddress = 'test@upcse-integration.coop';
+const wrongEmailAddress = 'Wrong Email address';
 
 const [email1, email2, email3] = knownUser.emails;
 

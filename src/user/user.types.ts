@@ -40,7 +40,9 @@ export class AddUser implements IAddUser {
 
   @IsOptional()
   @Field(() => Date, { nullable: true })
-  @MaxDate(new Date(Date.now()), { message: "La date de naissance ne peut pas être définie dans le future" })
+  @MaxDate(new Date(Date.now()), {
+    message: 'La date de naissance ne peut pas être définie dans le future',
+  })
   birthdate?: Date;
 }
 

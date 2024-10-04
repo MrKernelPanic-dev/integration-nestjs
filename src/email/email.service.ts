@@ -16,12 +16,15 @@ export class EmailService {
     private readonly emailRepository: Repository<EmailEntity>,
   ) {}
 
-  async findById(id:string):Promise<IEmail> {
+  async findById(id: string): Promise<IEmail> {
     return this.emailRepository.findOneBy({ id: Equal(id) });
   }
 
-  async findByFilters(filters:IEmailFilters, userId?:string):Promise<UserEmail[]> {
-    const where:FindOptionsWhere<EmailEntity> = {};
+  async findByFilters(
+    filters: IEmailFilters,
+    userId?: string,
+  ): Promise<UserEmail[]> {
+    const where: FindOptionsWhere<EmailEntity> = {};
 
     if (userId) {
       where.userId = Equal(userId);

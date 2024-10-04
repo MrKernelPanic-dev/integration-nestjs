@@ -13,7 +13,11 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 
 // Emails
-import { MutateUserEmailArgs, EmailFiltersArgs, UserEmail } from './email.types';
+import {
+  MutateUserEmailArgs,
+  EmailFiltersArgs,
+  UserEmail,
+} from './email.types';
 import { EmailService } from './email.service';
 import { IEmail } from './email.interfaces';
 
@@ -44,13 +48,14 @@ export class EmailResolver {
     @Args() { userId, email }: MutateUserEmailArgs,
   ): Promise<IEmail> {
     // 1. Get User
-    const user = await  this.userRepository.findOneBy({ id: Equal(userId) });
+    const user = await this.userRepository.findOneBy({ id: Equal(userId) });
 
     // 2. Handle errors
     //   2.1 - If user is not found
     //   2.1 - If user is deactivated
     if (!user) throw new NotFoundException(`User with ID ${userId} not found`);
-    if(user.status === 'inactive') throw new BadRequestException('Cannot update deactivated user emails');
+    if (user.status === 'inactive')
+      throw new BadRequestException('Cannot update deactivated user emails');
 
     // 3. Delete user email
     return this._service.create(userId, email);
@@ -61,20 +66,25 @@ export class EmailResolver {
     @Args() { userId, email }: MutateUserEmailArgs,
   ): Promise<IEmail> {
     // 1. Get User
-    const user = await  this.userRepository.findOneBy({ id: Equal(userId) });
+    const user = await this.userRepository.findOneBy({ id: Equal(userId) });
 
     // 2. Handle errors
     //   2.1 - If user is not found
     //   2.1 - If user is deactivated
     if (!user) throw new NotFoundException(`User with ID ${userId} not found`);
-    if(user.status === 'inactive') throw new BadRequestException('Cannot update non-active user emails');
+    if (user.status === 'inactive')
+      throw new BadRequestException('Cannot update non-active user emails');
 
     // 3. Get Email to delete from user
-    const [deletedEmail] = await this._service.findByFilters({ address: { equal: email, in: undefined }}, userId);
+    const [deletedEmail] = await this._service.findByFilters(
+      { address: { equal: email, in: undefined } },
+      userId,
+    );
 
     // 4. Handle error
     //   4.1 - If Email is not found
-    if (!deletedEmail) throw new NotFoundException(`Email not found : ${email}`);
+    if (!deletedEmail)
+      throw new NotFoundException(`Email not found : ${email}`);
 
     // 5. Delete user email
     return this._service.remove(deletedEmail);

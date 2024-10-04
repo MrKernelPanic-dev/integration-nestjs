@@ -1,3 +1,4 @@
+// packages
 import {
   Args,
   ID,
@@ -7,13 +8,14 @@ import {
   ResolveField,
   Resolver,
 } from '@nestjs/graphql';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Equal, FindOptionsWhere, In, Repository } from 'typeorm';
-import { EmailFiltersArgs, UserEmail } from '../email/email.types';
-import { EmailEntity } from '../email/email.entity';
+
+// Users
 import { UserId } from './user.interfaces';
 import { UserService } from './user.service';
 import { AddUser, User, UserIdArgs } from './user.types';
+
+// Emails
+import { EmailFiltersArgs, UserEmail } from '../email/email.types';
 import { EmailService } from '../email/email.service';
 
 @Resolver(() => User)
@@ -21,8 +23,6 @@ export class UserResolver {
   constructor(
     private readonly _service: UserService,
     private readonly _emailService: EmailService,
-    @InjectRepository(EmailEntity)
-    private readonly emailRepository: Repository<EmailEntity>,
   ) {}
 
   @Query(() => User, { name: 'user', nullable: true })

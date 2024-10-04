@@ -1,11 +1,16 @@
+// Packages
 import { Module } from '@nestjs/common';
-import { UserService } from './user/user.service';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
-import { UserResolver } from './user/user.resolver';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { UserEntity } from './user/user.entity';
 import { config } from 'dotenv';
+
+// Users
+import { UserService } from './user/user.service';
+import { UserResolver } from './user/user.resolver';
+import { UserEntity } from './user/user.entity';
+
+// Emails
 import { EmailResolver } from './email/email.resolver';
 import { EmailService } from './email/email.service';
 import { EmailEntity } from './email/email.entity';
