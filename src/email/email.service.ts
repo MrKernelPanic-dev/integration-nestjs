@@ -1,6 +1,10 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+// Packages
+import { randomUUID } from 'crypto';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Equal, FindOptionsWhere, In, Repository } from 'typeorm';
+
+// Emails
 import { EmailEntity } from './email.entity';
 import { IEmail, IEmailFilters } from './email.interfaces';
 import { UserEmail } from './email.types';
@@ -17,7 +21,7 @@ export class EmailService {
   }
 
   async findByFilters(filters:IEmailFilters, userId?:string):Promise<UserEmail[]> {
-    let where: FindOptionsWhere<EmailEntity> = {};
+    const where:FindOptionsWhere<EmailEntity> = {};
 
     if (userId) {
       where.userId = Equal(userId);
@@ -35,5 +39,16 @@ export class EmailService {
       order: { address: 'asc' },
     });
   }
-}
 
+  async create(userId: string, email: string): Promise<IEmail> {
+    return this.emailRepository.create({
+      id: randomUUID(),
+      userId,
+      address: email,
+    });
+  }
+
+  async remove(email: EmailEntity): Promise<IEmail> {
+    return this.emailRepository.remove(email);
+  }
+}
